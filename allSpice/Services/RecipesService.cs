@@ -9,6 +9,16 @@ namespace allSpice.Services
             _repo = repo;
         }
 
+        internal Recipe DeleteRecipe(int id, string userId)
+        {
+            Recipe recipe = this.Get(id);
+            if (recipe.CreatorId != userId) throw new Exception("You don't own this recipe.");
+            int rows = _repo.DeleteRecipe(id);
+            if (rows == 0) throw new Exception("We were unable to delete that recipe");
+            if (rows > 1) throw new Exception("We seem to have deleted more than one recipe.");
+            return recipe;
+        }
+
         internal Recipe EditRecipe(int id, Recipe recipeData)
         {
             Recipe original = this.Get(id);

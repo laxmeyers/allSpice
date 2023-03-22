@@ -9,6 +9,15 @@ namespace allSpice.Repositories
             _db = db;
         }
 
+        internal int DeleteRecipe(int id)
+        {
+            string sql = @"
+            Delete From recipes where id = @id;
+            ";
+            int rows = _db.Execute(sql, new { id });
+            return rows;
+        }
+
         internal List<Recipe> GetAllRecipes()
         {
             string sql = @"
