@@ -66,11 +66,11 @@ namespace allSpice.Repositories
             Set
             id = @id,
             title = @title,
-            instructions = @instructions
-            img = @img
+            instructions = @instructions,
+            img = @img,
             category = @category,
-            creatorId = @creatorId,
-            where id = @id;
+            creatorId = @creatorId
+            WHERE id = @id;
             ";
             int rows = _db.Execute(sql, original);
             return rows;
