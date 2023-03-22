@@ -9,6 +9,6 @@ namespace allSpice.Models
         public string Category { get; set; }
         public string CreatorId { get; set; }
 
-        // public Account Creator { get; set; }
+        public Profile Creator { get; set; }
     }
 }

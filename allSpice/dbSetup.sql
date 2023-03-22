@@ -41,4 +41,13 @@ Select
     recipes.*,
     accounts.name
 from recipes
-    join accounts on accounts.id = creatorId;
+    join accounts on accounts.id = creatorId
+where id = 1;
+
+Update recipes
+Set
+    title = @title,
+    instructions = @instructions id = @id,
+    category = @category,
+    creatorId = @creatorId,
+where id = @id;
