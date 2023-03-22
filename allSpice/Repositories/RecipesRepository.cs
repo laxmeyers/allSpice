@@ -9,6 +9,42 @@ namespace allSpice.Repositories
             _db = db;
         }
 
+        internal List<Recipe> GetAllRecipes()
+        {
+            string sql = @"
+            Select
+            recipes.*,
+            accounts.*
+            from recipes
+            JOIN accounts ON accounts.id = creatorId;
+            ";
+            List<Recipe> recipes = _db.Query<Recipe, Profile, Recipe>(sql, (rec, profile) =>
+            {
+                rec.Creator = profile;
+                return rec;
+            }
+            ).ToList();
+            return recipes;
+        }
+
+        internal Recipe GetOneRecipe(int id)
+        {
+            string sql = @"
+            Select
+            recipes.*,
+            accounts.*
+            from recipes
+            JOIN accounts ON accounts.id = creatorId
+            where recipes.id = @id;
+            ";
+            Recipe recipe = _db.Query<Recipe, Profile, Recipe>(sql, (rec, pro) =>
+            {
+                rec.Creator = pro;
+                return rec;
+            }, new { id }).FirstOrDefault();
+            return recipe;
+        }
+
         internal Recipe MakeRecipe(Recipe recipeData)
         {
             string sql = @"
@@ -21,6 +57,23 @@ namespace allSpice.Repositories
             int id = _db.ExecuteScalar<int>(sql, recipeData);
             recipeData.Id = id;
             return recipeData;
+        }
+
+        internal int Updated(Recipe original)
+        {
+            string sql = @"
+            Update recipes
+            Set
+            id = @id,
+            title = @title,
+            instructions = @instructions
+            img = @img
+            category = @category,
+            creatorId = @creatorId,
+            where id = @id;
+            ";
+            int rows = _db.Execute(sql, original);
+            return rows;
         }
     }
 }
