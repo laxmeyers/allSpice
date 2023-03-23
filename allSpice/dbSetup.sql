@@ -8,6 +8,8 @@ CREATE TABLE
         picture varchar(255) COMMENT 'User Picture'
     ) default charset utf8 COMMENT '';
 
+-- SECTION recipes
+
 CREATE Table
     recipes(
         id int AUTO_INCREMENT not Null PRIMARY KEY,
@@ -51,3 +53,29 @@ Set
     category = @category,
     creatorId = @creatorId,
 where id = @id;
+
+-- SECTION ingredients
+
+CREATE Table
+    ingredients(
+        id int AUTO_INCREMENT PRIMARY KEY,
+        name varchar(50) not null,
+        quantity varchar(50) not null,
+        recipeId int not NULL,
+        Foreign Key (recipeId) REFERENCES recipes(id) on Delete CASCADE
+    ) default charset utf8 COMMENT '';
+
+drop Table ingredients;
+
+-- SECTION favorites
+
+create table
+    favorites(
+        id int AUTO_INCREMENT not NULL PRIMARY KEY,
+        accountId VARCHAR(255) not null,
+        recipeId int not NULL,
+        Foreign Key (accountId) REFERENCES accounts(id) on Delete CASCADE,
+        Foreign Key (recipeId) REFERENCES recipes(id) on Delete CASCADE
+    ) default charset utf8 COMMENT '';
+
+drop table favorites;
