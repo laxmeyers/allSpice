@@ -35,7 +35,7 @@ namespace allSpice.Controllers
             try
             {
                 Account userInfo = await _auth.GetUserInfoAsync<Account>(HttpContext);
-                Ingredient ingredient = _ingredientsService.RemoveIngredient(id);
+                Ingredient ingredient = _ingredientsService.RemoveIngredient(id, userInfo.Id);
                 return Ok($"removed {ingredient.Name}");
             }
             catch (Exception e)
