@@ -43,5 +43,28 @@ namespace allSpice.Repositories
             favoriteData.Id = id;
             return favoriteData;
         }
+
+        internal Favorite GetOneFavorite(int id)
+        {
+            string sql = @"
+            Select 
+            * 
+            from favorites 
+            where id = @id;
+            ";
+            Favorite favorite = _db.Query<Favorite>(sql, new { id }).FirstOrDefault();
+            return favorite;
+        }
+
+        internal int DeleteFavorite(int id)
+        {
+            string sql = @"
+            Delete
+            from favorites 
+            where id = @id;
+            ";
+            int rows = _db.Execute(sql, new { id });
+            return rows;
+        }
     }
 }
