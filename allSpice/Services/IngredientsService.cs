@@ -25,12 +25,14 @@ namespace allSpice.Services
             return ingredients;
         }
 
-        internal Ingredient RemoveIngredient(int id)
+        internal Ingredient RemoveIngredient(int id, string userId)
         {
             Ingredient ingredient = _repo.FindIngredient(id);
             if (ingredient == null) throw new Exception("This ingredient isn't here.");
+            Recipe recipe = _recipeService.Get(ingredient.RecipeId);
+            if (recipe.CreatorId != userId) throw new Exception("This isnt your recipe");
             int rows = _repo.RemoveIngredient(id);
-            if (rows == null) throw new Exception("Unable to find ingredient to delete");
+            if (rows == 0) throw new Exception("Unable to find ingredient to delete");
             if (rows > 1) throw new Exception("more than one ingredient removed");
             return ingredient;
 

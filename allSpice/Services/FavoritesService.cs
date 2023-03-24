@@ -9,9 +9,10 @@ namespace allSpice.Services
             _repo = repo;
         }
 
-        internal List<Favorite> GetFavorites()
+        internal List<FavoriteRecipe> GetFavorites(string userId)
         {
-            throw new NotImplementedException();
+            List<FavoriteRecipe> favorites = _repo.GetFavorites(userId);
+            return favorites;
         }
 
         internal Favorite MakeFavorite(Favorite favoriteData)
