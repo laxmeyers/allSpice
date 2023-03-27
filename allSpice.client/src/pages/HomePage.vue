@@ -9,9 +9,9 @@
     </div>
     <div class="row">
       <div class="col-md-5 rounded sort-buttons m-auto p-3 d-flex justify-content-between bg-light">
-        <button class="btn btn-outline-success" @click="GetAllRecipes()">Home</button>
-        <button class="btn btn-outline-success">My Recipes</button>
-        <button v-if="account.id" class="btn btn-outline-success" @click="GetFavorites()">Favorites</button>
+        <button class="btn btn-outline-success" @click="ChangeRecipes(0)">Home</button>
+        <button class="btn btn-outline-success" @click="ChangeRecipes(1)">My Recipes</button>
+        <button v-if="account.id" class="btn btn-outline-success" @click="ChangeRecipes(2)">Favorites</button>
       </div>
     </div>
   </div>
@@ -27,12 +27,13 @@
 <script>
 import Pop from '../utils/Pop';
 import { recipesService } from '../services/RecipesService'
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, watchEffect, ref } from 'vue';
 import { AppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard.vue';
 
 export default {
   setup() {
+    const filter = ref(0)
     async function GetAllRecipes() {
       try {
         await recipesService.GetAllRecipes();
@@ -41,31 +42,43 @@ export default {
         Pop.error(error, "[getting alll recipes]");
       }
     }
-    onMounted(() => {
-      GetAllRecipes();
-    });
-    return {
-      recipes: computed(() => AppState.recipes),
-      account: computed(() => AppState.account),
-
-      async GetFavorites() {
+      async function GetFavorites() {
         try {
           await recipesService.GetFavorites();
-        } catch (error) {
-          Pop.error(error, '[Getting my favorites]')
-        }
-      },
-      async GetAllRecipes() {
-        try {
-          await recipesService.GetAllRecipes();
+          await recipesService.SetFavorites();
         }
         catch (error) {
           Pop.error(error, "[getting alll recipes]");
         }
       }
-    };
-  },
-  components: { RecipeCard }
+      onMounted(() => {
+        GetAllRecipes();
+      });
+
+      watchEffect(() => {
+        if (AppState.account?.id) {
+          GetFavorites()
+        }
+      })
+
+      return {
+        recipes: computed(() => {
+          if (!filter.value) {
+            return AppState.recipes
+          } else if (filter.value == 1) {
+            return AppState.recipes.filter(r => r.creatorId == AppState.account.id)
+          } else {
+            return AppState.recipes.filter(r => r.favoriteId != 0)
+          }
+        }),
+        account: computed(() => AppState.account),
+
+        async ChangeRecipes(recipes) {
+          filter.value = recipes
+        },
+      };
+    },
+    components: { RecipeCard }
 }
 </script>
 

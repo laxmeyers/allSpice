@@ -7,18 +7,37 @@
         <p class="m-0 px-2">{{ recipe.category }}</p>
     </div>
     <div class="rounded position-absolute recipe-heart text-light px-1 selectable">
-        <i class="mdi mdi-heart-outline text-danger fs-5" title="favorite"></i>
+        <i v-if="!recipe.favoriteId" class="mdi mdi-heart-outline text-danger fs-5" title="favorite" @click="FavoriteRecipe(recipe)"></i>
+        <i v-else="!recipe.favoriteId" class="mdi mdi-heart text-danger fs-5" title="un-favorite" @click="UnfavoriteRecipe(recipe)"></i>
+
     </div>
 </template>
-
-
 <script>
+import { recipesService } from '../services/RecipesService';
+import Pop from '../utils/Pop';
+
 export default {
     props: {
         recipe: { type: Object, required: true }
     },
     setup() {
-        return {}
+        return {
+
+            async UnfavoriteRecipe(recipe) {
+                try {
+                    await recipesService.UnfavoriteRecipe(recipe);
+                } catch (error) {
+                    Pop.error(error, '[removing favorite]')
+                }
+            },
+            async FavoriteRecipe(recipe) {
+                try {
+                    await recipesService.FavoriteRecipe(recipe);
+                } catch (error) {
+                    Pop.error(error, '[creating favorite]')
+                }
+            }
+        }
     }
 }
 </script>
