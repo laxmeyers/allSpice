@@ -21,7 +21,16 @@
         <RecipeCard :recipe="r" />
       </div>
     </div>
+    <div class="row sticky-bottom p-3">
+      <div class="col-12 text-end">
+        <button class="btn btn-success mdi mdi-plus" title="Add Recipe" data-bs-toggle="modal" data-bs-target="#recipeForm"></button>
+      </div>
+    </div>
   </div>
+
+  <Modal id="recipeForm">
+    <RecipeForm></RecipeForm>
+  </Modal>
 </template>
 
 <script>
@@ -30,6 +39,7 @@ import { recipesService } from '../services/RecipesService'
 import { onMounted, computed, watchEffect, ref } from 'vue';
 import { AppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard.vue';
+import RecipeForm from '../components/RecipeForm.vue';
 
 export default {
   setup() {
@@ -78,7 +88,7 @@ export default {
         },
       };
     },
-    components: { RecipeCard }
+    components: { RecipeCard, RecipeForm }
 }
 </script>
 
