@@ -1,5 +1,6 @@
 <template>
-        <img @click="SetRecipe(recipe)" data-bs-toggle="modal" data-bs-target="#recipeModal" :src="recipe.img" class="img-fluid same-size rounded selectable" alt="">
+    <img @click="SetRecipe(recipe)" data-bs-toggle="modal" data-bs-target="#recipeModal" :src="recipe.img"
+        class="img-fluid same-size rounded selectable" alt="">
     <div class="rounded position-absolute justify-content-center w-75 recipe-title text-center text-light">
         <p class="m-0">{{ recipe.title }}</p>
     </div>
@@ -7,8 +8,10 @@
         <p class="m-0 px-2">{{ recipe.category }}</p>
     </div>
     <div class="rounded position-absolute recipe-heart text-light px-1 selectable">
-        <i v-if="!recipe.favoriteId" class="mdi mdi-heart-outline text-danger fs-5" title="favorite" @click="FavoriteRecipe(recipe)"></i>
-        <i v-else="!recipe.favoriteId" class="mdi mdi-heart text-danger fs-5" title="un-favorite" @click="UnfavoriteRecipe(recipe)"></i>
+        <i v-if="!recipe.favoriteId" class="mdi mdi-heart-outline text-danger fs-5" title="favorite"
+            @click="FavoriteRecipe(recipe)"></i>
+        <i v-else="!recipe.favoriteId" class="mdi mdi-heart text-danger fs-5" title="un-favorite"
+            @click="UnfavoriteRecipe(recipe)"></i>
     </div>
 
     <Modal id="recipeModal">
@@ -43,8 +46,13 @@ export default {
                     Pop.error(error, "[creating favorite]");
                 }
             },
-            SeeRecipe(recipe) {
-                logger.log("hello");
+            async SetRecipe(recipe) {
+                try {
+                    recipesService.SetRecipe(recipe)
+                    await recipesService.getIngredients(recipe.id);
+                } catch (error) {
+                    Pop.error(error, '[setting active recipe]')
+                }
             }
         };
     },
@@ -54,11 +62,10 @@ export default {
 
 
 <style lang="scss" scoped>
-
-.same-size{
-    height:100%;
+.same-size {
+    height: 100%;
     width: 100%;
-    object-fit:cover;
+    object-fit: cover;
 }
 
 .recipe-title {
