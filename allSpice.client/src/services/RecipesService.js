@@ -50,6 +50,25 @@ class RecipesService{
         const res = await api.get(`api/recipes/${recipeId}/ingredients`)
         AppState.ingredients = res.data
     }
+
+    async DeleteRecipe(recipe) {
+        const res = await api.delete('api/recipes/' + recipe.id)
+        const index = AppState.recipes.findIndex(r => r.id == recipe.id)
+        AppState.recipes.splice(index, 1)
+        AppState.activeRecipe = {}
+        AppState.ingredients = []
+    }
+
+    async EditInstructions(instructions) {
+        const res = await api.put('api/recipes/' + AppState.activeRecipe.id, instructions)
+        AppState.activeRecipe.instructions = res.data.instructions
+    }
+
+    async DeleteIngredient(ingredient) {
+        const res = await api.delete('api/ingredients/' + ingredient.id)
+        let index = AppState.ingredients.findIndex(i => i.id == ingredient.id)
+        AppState.ingredients.splice(index, 1)
+    }
 }
 
 export const recipesService = new RecipesService();

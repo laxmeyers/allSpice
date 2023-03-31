@@ -48,7 +48,7 @@ export default {
             },
             async SetRecipe(recipe) {
                 try {
-                    recipesService.SetRecipe(recipe)
+                    await recipesService.SetRecipe(recipe)
                     await recipesService.getIngredients(recipe.id);
                 } catch (error) {
                     Pop.error(error, '[setting active recipe]')
