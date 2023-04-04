@@ -94,7 +94,7 @@ export default {
 
 <style scoped lang="scss">
 .header-background {
-  background-image: url("/header.png");
+  background-image: url(/header.png);
   background-size: cover;
   background-position: center;
   box-shadow: 5px 5px 5px black;
